@@ -8,10 +8,11 @@ app = Flask(__name__)
 
 
 # Endpoint to shut down the Raspberry Pi
-@app.route("/shutdown", methods=["POST"])
+@app.route('/shutdown', methods=['POST'])
 def shutdown():
     try:
-        subprocess.run(["docker", "system", "shutdown"])  # Reboot/Shutdown host
+        # Issue shutdown command to the host (Raspberry Pi)
+        os.system('poweroff')  # or 'sudo poweroff' if you have sudo privileges inside the container
         return "Shutting down..."
     except Exception as e:
         return f"Error: {str(e)}"
