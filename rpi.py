@@ -8,7 +8,7 @@ app = Flask(__name__)
 # Endpoint to shut down the Raspberry Pi
 @app.route('/shutdown', methods=['POST'])
 def shutdown():
-    os.system('sudo shutdown now')
+    os.system('systemctl poweroff')
     return "Shutting down..."
 
 # Endpoint to fetch Raspberry Pi stats
