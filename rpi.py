@@ -10,8 +10,11 @@ app = Flask(__name__)
 # Endpoint to shut down the Raspberry Pi
 @app.route("/shutdown", methods=["POST"])
 def shutdown():
-    subprocess.run(["shutdown", "-s"])
-    return "Shutting down..."
+    try:
+        subprocess.run(["sudo", "/sbin/shutdown", "-h", "now"])
+        return "Shutting down..."
+    except Exception as e:
+        return f"Error: {str(e)}"
 
 
 # Endpoint to fetch Raspberry Pi stats
