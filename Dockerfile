@@ -8,6 +8,8 @@ WORKDIR /app
 COPY requirements.txt ./
 COPY rpi.py ./
 
+RUN apt-get update && apt-get install -y gcc python3-dev
+
 # Install the dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
