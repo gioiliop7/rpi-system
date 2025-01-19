@@ -2,8 +2,6 @@ from flask import Flask, jsonify
 import os
 import psutil
 import time
-import subprocess
-
 app = Flask(__name__)
 
 # Endpoint to fetch Raspberry Pi stats
