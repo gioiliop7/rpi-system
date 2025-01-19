@@ -9,6 +9,7 @@ COPY requirements.txt ./
 COPY rpi.py ./
 
 RUN apt-get update && apt-get install -y gcc python3-dev
+RUN apt-get update && apt-get install -y sudo
 
 # Install the dependencies
 RUN pip install --no-cache-dir -r requirements.txt
