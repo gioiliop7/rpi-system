@@ -6,27 +6,6 @@ import subprocess
 
 app = Flask(__name__)
 
-
-# Endpoint to shut down the Raspberry Pi
-@app.route('/shutdown', methods=['POST'])
-def shutdown():
-    # Get the path to the script in the same directory as the Python script
-    script_path = os.path.join(os.path.dirname(__file__), 'shutdown.sh')
-
-    # Make sure the script is executable (optional)
-    os.chmod(script_path, 0o755)
-
-    # Run the script
-    try:
-        result = subprocess.run([script_path], check=True, shell=True)
-        print("Script executed successfully!")
-        return "Script executed successfully!"
-    except subprocess.CalledProcessError as e:
-        print(f"Error executing script: {e}")
-        return "Error executing script!"
-
-
-
 # Endpoint to fetch Raspberry Pi stats
 @app.route("/stats", methods=["GET"])
 def get_stats():
