@@ -20,8 +20,11 @@ def shutdown():
     try:
         result = subprocess.run([script_path], check=True, shell=True)
         print("Script executed successfully!")
+        return "Script executed successfully!"
     except subprocess.CalledProcessError as e:
         print(f"Error executing script: {e}")
+        return "Error executing script!"
+
 
 
 # Endpoint to fetch Raspberry Pi stats
