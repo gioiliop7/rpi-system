@@ -2,21 +2,24 @@ from flask import Flask, jsonify
 import os
 import psutil
 import time
+import subprocess
 
 app = Flask(__name__)
 
+
 # Endpoint to shut down the Raspberry Pi
-@app.route('/shutdown', methods=['POST'])
+@app.route("/shutdown", methods=["POST"])
 def shutdown():
-    os.system('systemctl poweroff')
+    subprocess.run(["shutdown", "-s"])
     return "Shutting down..."
 
+
 # Endpoint to fetch Raspberry Pi stats
-@app.route('/stats', methods=['GET'])
+@app.route("/stats", methods=["GET"])
 def get_stats():
     try:
         # Get temperature
-        temp_output = os.popen('vcgencmd measure_temp').readline()
+        temp_output = os.popen("vcgencmd measure_temp").readline()
         temperature = temp_output.replace("temp=", "").strip()
 
         # Get CPU usage
@@ -26,7 +29,10 @@ def get_stats():
         cpu_freq = psutil.cpu_freq().current
 
         # Get CPU temperature per core
-        cpu_temp = [os.popen(f'cat /sys/class/thermal/thermal_zone{i}/temp').readline().strip() for i in range(psutil.cpu_count())]
+        cpu_temp = [
+            os.popen(f"cat /sys/class/thermal/thermal_zone{i}/temp").readline().strip()
+            for i in range(psutil.cpu_count())
+        ]
 
         # Get memory stats (RAM)
         memory = psutil.virtual_memory()
@@ -44,7 +50,7 @@ def get_stats():
         swap_percent = swap.percent  # Percentage used
 
         # Get disk stats
-        disk = psutil.disk_usage('/')
+        disk = psutil.disk_usage("/")
         disk_total = disk.total / 1024 / 1024 / 1024  # Convert to GB
         disk_used = disk.used / 1024 / 1024 / 1024  # Convert to GB
         disk_free = disk.free / 1024 / 1024 / 1024  # Convert to GB
@@ -61,7 +67,7 @@ def get_stats():
         bytes_received = net_io.bytes_recv / 1024 / 1024  # Convert to MB
 
         # Get GPU memory usage
-        gpu_mem_output = os.popen('vcgencmd get_mem gpu').readline()
+        gpu_mem_output = os.popen("vcgencmd get_mem gpu").readline()
         gpu_memory = gpu_mem_output.replace("gpu=", "").strip()
 
         # Get uptime
@@ -70,16 +76,16 @@ def get_stats():
         uptime_hours = uptime_seconds / 3600
 
         # Get power supply stats
-        voltage_output = os.popen('vcgencmd measure_volts').readline()
+        voltage_output = os.popen("vcgencmd measure_volts").readline()
         voltage = voltage_output.replace("volt=", "").strip()
-        throttled_output = os.popen('vcgencmd get_throttled').readline()
+        throttled_output = os.popen("vcgencmd get_throttled").readline()
         throttled = throttled_output.strip()
 
         # Get load average (1, 5, 15 minutes)
         load_avg = os.getloadavg()
 
         # Get serial number
-        serial_number = os.popen('cat /proc/cpuinfo | grep Serial').readline().strip()
+        serial_number = os.popen("cat /proc/cpuinfo | grep Serial").readline().strip()
 
         # Get Raspberry Pi model
         pi_model = os.popen('cat /proc/cpuinfo | grep "Model"').readline().strip()
@@ -130,5 +136,6 @@ def get_stats():
     except Exception as e:
         return jsonify({"error": str(e)})
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
