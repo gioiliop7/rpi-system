@@ -11,10 +11,10 @@ app = Flask(__name__)
 @app.route('/shutdown', methods=['POST'])
 def shutdown():
     try:
-        # Issue shutdown command to the host (Raspberry Pi)
-        os.system('poweroff')  # or 'sudo poweroff' if you have sudo privileges inside the container
+        # Use the subprocess to call the shutdown command on the host
+        subprocess.run(['sudo', 'shutdown', '-h', 'now'], check=True)
         return "Shutting down..."
-    except Exception as e:
+    except subprocess.CalledProcessError as e:
         return f"Error: {str(e)}"
 
 
