@@ -11,7 +11,7 @@ app = Flask(__name__)
 @app.route("/shutdown", methods=["POST"])
 def shutdown():
     try:
-        subprocess.run(["sudo", "poweroff"])
+        subprocess.run(["docker", "system", "shutdown"])  # Reboot/Shutdown host
         return "Shutting down..."
     except Exception as e:
         return f"Error: {str(e)}"
